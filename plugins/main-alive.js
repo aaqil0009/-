@@ -27,19 +27,26 @@ async (conn, mek, m, { from, quoted, sender, reply }) => {
 
         const uptime = formatUptime(process.uptime());
         const RAM = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2);
+        const totalRam = (os.totalmem() / 1024 / 1024 / 1024).toFixed(2);
         const platform = os.platform();
+        const BOT_NAME = config.BOT_NAME || "AAQIL MD";
 
-        // PROFESSIONAL DASHBOARD DESIGN
-        const status = `*╭───────────〔 ᴀᴀQɪʟ-ᴍᴅ 〕──────────┈⊷*
-*│*
-*┝┤ 🤖 sᴛᴀᴛᴜs:* ᴏɴʟɪɴᴇ & ᴀᴄᴛɪᴠᴇ
-*┝┤ ⏱️ ᴜᴘᴛɪᴍᴇ:* ${uptime}
-*┝┤ 📟 ʀᴀᴍ ᴜsᴀɢᴇ:* ${RAM} ᴍʙ
-*┝┤ 💻 ᴘʟᴀᴛғᴏʀᴍ:* ${platform}
-*│*
-*╰──────────────────────────────────┈⊷*
+        // MODERN CYBER / TECH DASHBOARD DESIGN
+        const status = `
+  🏴 *${BOT_NAME.toUpperCase()}* 🏴
 
-> *ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴀᴀQɪʟ ᴍᴅ*`;
+┌───〔 *S Y S T E M  A L I V E* 〕
+│
+├──▸ 🤖 *sᴛᴀᴛᴜs:* ᴏɴʟɪɴᴇ & ᴀᴄᴛɪᴠᴇ
+├──▸ 👤 *ᴏᴡɴᴇʀ:* ${config.OWNER_NAME || "AAQIL MD"}
+├──▸ ⏱️ *ᴜᴘᴛɪᴍᴇ:* ${uptime}
+├──▸ 🖥️ *ʀᴀᴍ:* ${RAM} MB / ${totalRam} GB
+├──▸ 📟 *ᴘʟᴀᴛғᴏʀᴍ:* ${platform}
+├──▸ 🌐 *ᴍᴏᴅᴇ:* ${config.MODE || "Public"}
+│
+└───▸
+
+> *🏴 ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴀᴀQɪʟ ᴍᴅ 🏴*`;
 
         await conn.sendMessage(from, { 
             text: status,
@@ -48,8 +55,8 @@ async (conn, mek, m, { from, quoted, sender, reply }) => {
                 forwardingScore: 999,
                 isForwarded: true,
                 forwardedNewsletterMessageInfo: {
-                    newsletterJid: '120363426472060176@newsletter',
-                    newsletterName: "AAQIL MD TECH",
+                    newsletterJid: '120363431150016962@newsletter',
+                    newsletterName: BOT_NAME,
                     serverMessageId: 143
                 }
             }
