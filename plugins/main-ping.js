@@ -4,7 +4,7 @@ import { cmd, commands } from '../command.js';
 
 const __filename = fileURLToPath(import.meta.url);
 
-// --- PING COMMAND (MODERN UI) ---
+// --- PING COMMAND (CYBER TECH UI) ---
 cmd({
     pattern: "ping",
     alias: ["speed", "pong"],
@@ -35,9 +35,21 @@ async (conn, mek, m, { from, quoted, sender, reply }) => {
 
         const end = new Date().getTime();
         const responseTime = (end - start) / 1000;
+        const BOT_NAME = config.BOT_NAME || "AAQIL MD";
 
-        // Ultra Sleek Text Design (ORIGINAL)
-        const text = `*ᴘᴏɴɢ...!!* 📡\n\n*🚀 sᴘᴇᴇᴅ:* ${responseTime.toFixed(2)}ms\n*🧬 sᴛᴀᴛᴜs:* Online\n\n> *ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴀᴀQɪʟ-ᴍᴅ*`;
+        // Modern Cyber UI Design
+        const text = `
+  🏴 *${BOT_NAME.toUpperCase()}* 🏴
+
+┌───〔 *P O N G* 📡 〕
+│
+├──▸ ⚡ *sᴘᴇᴇᴅ:* ${responseTime.toFixed(2)}s
+├──▸ 🧬 *sᴛᴀᴛᴜs:* ᴏɴʟɪɴᴇ & ᴀᴄᴛɪᴠᴇ
+├──▸ 👤 *ᴏᴡɴᴇʀ:* ${config.OWNER_NAME || "AAQIL MD"}
+│
+└───▸
+
+> *🏴 ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴀᴀQɪʟ ᴍᴅ 🏴*`;
 
         await conn.sendMessage(from, {
             text,
@@ -46,8 +58,8 @@ async (conn, mek, m, { from, quoted, sender, reply }) => {
                 forwardingScore: 999,
                 isForwarded: true,
                 forwardedNewsletterMessageInfo: {
-                    newsletterJid: '120363426472060176@newsletter',
-                    newsletterName: "AAQIL MD TECH",
+                    newsletterJid: '120363431150016962@newsletter',
+                    newsletterName: BOT_NAME,
                     serverMessageId: 143
                 }
             }
@@ -80,34 +92,35 @@ async (conn, mek, m, { from, reply }) => {
         await new Promise(resolve => setTimeout(resolve, 500));
         const endTime = Date.now();
         const ping = endTime - startTime;
+        const BOT_NAME = config.BOT_NAME || "AAQIL MD";
 
         let status;
         let indicator;
         if (ping < 1000) {
-            status = "𝐄𝐱𝐜𝐞𝐥𝐥𝐞𝐧𝐭";
+            status = "ᴇxᴄᴇʟʟᴇɴᴛ";
             indicator = "🟢";
         } else if (ping < 1500) {
-            status = "𝐆𝐨𝐨𝐝";
+            status = "ɢᴏᴏᴅ";
             indicator = "🟡";
         } else {
-            status = "𝐋𝐚𝐠𝐠𝐲";
+            status = "ʟᴀɢɢʏ";
             indicator = "🔴";
         }
 
-        // Dashboard Style Design (ORIGINAL)
+        // Cyber Dashboard Style Design
         const msg = `
-┏━━━━━━━━━━━━━━━━━━┈⊷
-┃  ✨ *AAQIL-MD SYSTEM* ✨
-┗━━━━━━━━━━━━━━━━━━┈⊷
-┃
-┃ 📡 *Latency:* ${ping} ms
-┃ 🧠 *Quality:* ${status} ${indicator}
-┃ ⚡ *Performance:* Stable
-┃ 🛰️ *Server:* Global-High
-┃
-┗━━━━━━━━━━━━━━━━━━┈⊷
+  🏴 *${BOT_NAME.toUpperCase()}* 🏴
 
-> *Created by AAQIL MD*`;
+┌───〔 *P I N G  D A S H B O A R D* 〕
+│
+├──▸ 📡 *ʟᴀᴛᴇɴᴄʏ:* ${ping} ms
+├──▸ 🧠 *ǫᴜᴀʟɪᴛʏ:* ${status} ${indicator}
+├──▸ ⚡ *ᴘᴇʀғᴏʀᴍᴀɴᴄᴇ:* sᴛᴀʙʟᴇ
+├──▸ 🌐 *sᴇʀᴠᴇʀ:* ɢʟᴏʙᴀʟ-ʜɪɢʜ
+│
+└───▸
+
+> *🏴 ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴀᴀQɪʟ ᴍᴅ 🏴*`;
 
         await conn.sendMessage(from, { 
             text: msg.trim(),
@@ -115,8 +128,8 @@ async (conn, mek, m, { from, reply }) => {
                 forwardingScore: 999,
                 isForwarded: true,
                 forwardedNewsletterMessageInfo: {
-                    newsletterJid: '120363426472060176@newsletter',
-                    newsletterName: "AAQIL MD TECH",
+                    newsletterJid: '120363431150016962@newsletter',
+                    newsletterName: BOT_NAME,
                     serverMessageId: 143
                 }
             }
