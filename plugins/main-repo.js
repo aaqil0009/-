@@ -29,38 +29,39 @@ cmd({
 },
 async (conn, mek, m, { from, reply, userConfig }) => {
     try {
-        const BOT_NAME = userConfig?.BOT_NAME || config.BOT_NAME || 'AAQIL-MD';
+        const BOT_NAME = userConfig?.BOT_NAME || config.BOT_NAME || 'AAQIL MD';
         const OWNER_NAME = userConfig?.OWNER_NAME || config.OWNER_NAME || 'AAQIL MD';
         const BOT_IMAGE = userConfig?.BOT_IMAGE || userConfig?.BOT_MEDIA_URL || config.BOT_IMAGE || config.BOT_MEDIA_URL;
         
         const deployLink = 'https://aaqil-md.vercel.app';  // ⚠️ Change if you have your own
 
-        // --- NEW PREMIUM DESIGN ---
+        // --- MODERN CYBER TECH DESIGN ---
         const formattedInfo = `
-✨ *${BOT_NAME.toUpperCase()} - DEPLOYMENT HUB* ✨
+  🏴 *${BOT_NAME.toUpperCase()}* 🏴
 
-*╔══════════════════════╗*
-*┃ 🤖 SYSTEM INFORMATION*
-*╠══════════════════════╝*
-*┠ 👤 OWNER:* ${OWNER_NAME}
-*┠ 📦 VERSION:* 1.0.0 (Latest)
-*┠ 🛠️ ENGINE:* Node.js / Baileys
-*┠ ⏳ RUNTIME:* ${runtime(process.uptime())}
-*╚══════════════════════╝*
+┌───〔 *D E P L O Y M E N T  H U B* 〕
+│
+├──▸ 🤖 *sʏsᴛᴇᴍ:* ᴏɴʟɪɴᴇ & ᴀᴄᴛɪᴠᴇ
+├──▸ 👤 *ᴏᴡɴᴇʀ:* ${OWNER_NAME}
+├──▸ 📦 *ᴠᴇʀsɪᴏɴ:* 1.0.0 (Latest)
+├──▸ 🛠️ *ᴇɴɢɪɴᴇ:* Node.js / Baileys
+├──▸ ⏳ *ʀᴜɴᴛɪᴍᴇ:* ${runtime(process.uptime())}
+│
+└───▸
 
-*╔══════════════════════╗*
-*┃ 🚀 QUICK DEPLOYMENT*
-*╠══════════════════════╝*
-*┠ 🔗 PAIRING LINK:*
-*┃* ${deployLink}
-*┠ 📑 INSTRUCTIONS:*
-*┃ 1.* Click the link above.
-*┃ 2.* Enter your number with country code.
-*┃ 3.* Link the code in Linked Devices.
-*╚══════════════════════╝*
+┌───〔 *ǫᴜɪᴄᴋ  ᴅᴇᴘʟᴏʏ* 〕
+│
+├──▸ 🔗 *ᴘᴀɪʀɪɴɢ ʟɪɴᴋ:*
+│   ${deployLink}
+│
+├──▸ 📑 *ɪɴsᴛʀᴜᴄᴛɪᴏɴs:*
+│   1. Click the link above.
+│   2. Enter your number with country code.
+│   3. Link the code in Linked Devices.
+│
+└───▸
 
-*📢 Stay Connected for Updates!*
-*Powered By ${OWNER_NAME}*`.trim();
+> *🏴 ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴀᴀQɪʟ ᴍᴅ 🏴*`.trim();
 
         let imageToUse;
         const localImagePath = path.join(__dirname, '../lib/AAQILmd.jpg');
@@ -84,7 +85,7 @@ async (conn, mek, m, { from, reply, userConfig }) => {
                 forwardingScore: 999,
                 isForwarded: true,
                 forwardedNewsletterMessageInfo: {
-                    newsletterJid: '120363426472060176@newsletter',
+                    newsletterJid: '120363431150016962@newsletter',
                     newsletterName: `${BOT_NAME} - OFFICIAL`,
                     serverMessageId: 143
                 }
@@ -96,3 +97,4 @@ async (conn, mek, m, { from, reply, userConfig }) => {
         reply("❌ *Error:* Script fetch nahi ho saki.\n\n*_ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴀᴀQɪʟ ᴍᴅ_*");
     }
 });
+                    
