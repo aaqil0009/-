@@ -1,19 +1,16 @@
-import { fileURLToPath } from 'url';
-import { cmd } from '../command.js';
+Import { cmd } from '../command.js';
 import axios from 'axios';
-import config from '../config.js';
-import { WebUrl } from '../lib/functions.js';
+import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 
-// Clean API URL Connection
-const API_BASE_URL = WebUrl || 'https://ahmad-md.vercel.app/api';
+const API_BASE_URL = 'https://aaqil-md.vercel.app/api';
 
 cmd({
     pattern: "pair",
     alias: ["getpair", "clonebot"],
     react: "✅",
-    desc: "Get pairing code for bot",
+    desc: "Get pairing code for AAQIL MD bot",
     category: "owner",
     use: ".pair 923001234567",
     filename: __filename
@@ -22,135 +19,230 @@ cmd({
     q,
     senderNumber,
     reply,
-    react,
-    from
+    react
 }) => {
 
     try {
-        const botName = config.BOT_NAME || "AAQIL MD";
 
+        // =========================
+        // LOADING REACTION
+        // =========================
         await react('⏳');
 
+        // =========================
+        // GET PHONE NUMBER
+        // =========================
         const phoneNumber = q
             ? q.replace(/[^0-9]/g, '')
             : senderNumber.replace(/[^0-9]/g, '');
 
+        // =========================
+        // VALIDATE NUMBER
+        // =========================
         if (!phoneNumber) {
+
             await react('❌');
+
             return await reply(
                 "❌ Please provide a phone number\n\nExample:\n.pair 923001234567"
             );
         }
 
         if (phoneNumber.length < 10 || phoneNumber.length > 15) {
+
             await react('❌');
-            return await reply("❌ Invalid phone number format");
+
+            return await reply(
+                "❌ Invalid phone number format"
+            );
         }
 
+        // =========================
+        // FETCH SERVER LIST
+        // =========================
         let serversResponse;
 
         try {
+
             serversResponse = await axios.get(
                 `${API_BASE_URL}/servers`,
-                { timeout: 20000 }
+                {
+                    timeout: 20000
+                }
             );
+
         } catch (e) {
-            console.log("SERVER FETCH ERROR:", e.response?.data || e.message);
+
+            console.log(
+                "SERVER FETCH ERROR:",
+                e.response?.data || e.message
+            );
+
             await react('❌');
-            return await reply("❌ Failed to connect to API server");
+
+            return await reply(
+                "❌ Failed to connect to API server"
+            );
         }
 
+        // =========================
+        // CHECK SERVER RESPONSE
+        // =========================
         if (
             !serversResponse.data ||
             !Array.isArray(serversResponse.data.servers)
         ) {
-            console.log("INVALID SERVER RESPONSE:", serversResponse.data);
+
+            console.log(
+                "INVALID SERVER RESPONSE:",
+                serversResponse.data
+            );
+
             await react('❌');
-            return await reply("❌ Invalid server response");
+
+            return await reply(
+                "❌ Invalid server response"
+            );
         }
 
+        // =========================
+        // SERVER ARRAY
+        // =========================
         const servers = serversResponse.data.servers;
 
         if (servers.length === 0) {
+
             await react('❌');
-            return await reply("❌ No active servers found");
+
+            return await reply(
+                "❌ No active servers found"
+            );
         }
 
-        const randomServer = servers[Math.floor(Math.random() * servers.length)];
+        // =========================
+        // RANDOM SERVER SELECT
+        // =========================
+        const randomServer =
+            servers[Math.floor(Math.random() * servers.length)];
 
         if (!randomServer.url) {
+
             await react('❌');
-            return await reply("❌ Invalid server URL");
+
+            return await reply(
+                "❌ Invalid server URL"
+            );
         }
 
-        const serverUrl = randomServer.url.replace(/\/$/, '');
+        // REMOVE LAST /
+        const serverUrl =
+            randomServer.url.replace(/\/$/, '');
 
+        console.log("SELECTED SERVER:", serverUrl);
+
+        // =========================
+        // GET PAIR CODE
+        // =========================
         let response;
 
         try {
+
             response = await axios.get(
                 `${serverUrl}/code`,
                 {
-                    params: { number: phoneNumber },
+                    params: {
+                        number: phoneNumber
+                    },
                     timeout: 60000
                 }
             );
+
         } catch (e) {
-            console.log("PAIR API ERROR:", e.response?.data || e.message);
+
+            console.log(
+                "PAIR API ERROR:",
+                e.response?.data || e.message
+            );
+
             await react('❌');
+
             return await reply(
-                `❌ Pair API Failed\n\n${e.response?.data?.message || e.message}`
+                `❌ Pair API Failed\n\n${
+                    e.response?.data?.message ||
+                    e.message
+                }`
             );
         }
 
+        console.log(
+            "PAIR RESPONSE:",
+            response.data
+        );
+
+        // =========================
+        // EXTRACT PAIR CODE
+        // =========================
         const pairingCode =
             response.data?.code ||
             response.data?.pair ||
             response.data?.pairingCode;
 
+        // =========================
+        // CHECK PAIR CODE
+        // =========================
         if (!pairingCode) {
-            console.log("INVALID PAIR RESPONSE:", response.data);
+
+            console.log(
+                "INVALID PAIR RESPONSE:",
+                response.data
+            );
+
             await react('❌');
-            return await reply("❌ Pair code not found in API response");
+
+            return await reply(
+                "❌ Pair code not found in API response"
+            );
         }
 
+        // =========================
+        // SUCCESS REACTION
+        // =========================
         await react('✅');
 
-        // 1. INFO MESSAGE WITH NEWSLETTER CHANNEL
-        const msg = `
-✅ *${botName.toUpperCase()} PAIR CODE*
+        // =========================
+        // FIRST MESSAGE
+        // =========================
+        await reply(`
+╭━━〔 AAQIL MD PAIR 〕━━⬣
+┃
+┃ ✅ Pair code generated successfully
+┃ 🌐 SERVER: ${randomServer.name || 'Unknown'}
+┃
+┃ 📱 HOW TO CONNECT
+┃ 1. Open WhatsApp
+┃ 2. Linked Devices
+┃ 3. Link a Device
+┃ 4. Paste the code below
+┃
+╰━━━━━━━━━━━━━━⬣
+`);
 
-🌐 *Server:* ${randomServer.name || 'Active Server'}
-
-📱 *How to connect:*
-1. Open WhatsApp
-2. Go to Linked Devices
-3. Click "Link a Device"
-4. Enter the code sent below
-
-> *Powered by ${botName}*`;
-
-        await conn.sendMessage(from, {
-            text: msg.trim(),
-            contextInfo: {
-                forwardingScore: 999,
-                isForwarded: true,
-                forwardedNewsletterMessageInfo: {
-                    newsletterJid: '120363431150016962@newsletter',
-                    newsletterName: botName,
-                    serverMessageId: 143
-                }
-            }
-        }, { quoted: mek });
-
-        // 2. PAIR CODE MESSAGE (FORMATTED FOR 1-TAP EASY COPY)
-        await reply(`\`\`\`${pairingCode}\`\`\``);
+        // =========================
+        // SECOND MESSAGE (OTP ONLY)
+        // =========================
+        await reply(pairingCode);
 
     } catch (error) {
-        const botName = config.BOT_NAME || "AAQIL MD";
-        console.log("FULL ERROR:", error);
+
+        console.log(
+            "FULL ERROR:",
+            error
+        );
+
         await react('❌');
-        return await reply(`❌ *Error:* ${error.message}\n\n*_Powered by ${botName}_*`);
+
+        return await reply(
+            `❌ Error:\n${error.message}`
+        );
     }
 });
-            
