@@ -29,34 +29,31 @@ async (conn, mek, m, { from, quoted, sender, reply }) => {
         const RAM = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2);
         const totalRam = (os.totalmem() / 1024 / 1024 / 1024).toFixed(2);
         const platform = os.platform();
-        const BOT_NAME = config.BOT_NAME || "AAQIL MD";
+        const botName = config.BOT_NAME || "AAQIL MD";
+        const ownerName = config.OWNER_NAME || "Aaqil";
 
-        // MODERN CYBER / TECH DASHBOARD DESIGN
+        // CLEAN & SIMPLE ALIVE DESIGN
         const status = `
-  🏴 *${BOT_NAME.toUpperCase()}* 🏴
+🟢 *${botName.toUpperCase()} IS ALIVE*
 
-┌───〔 *S Y S T E M  A L I V E* 〕
-│
-├──▸ 🤖 *sᴛᴀᴛᴜs:* ᴏɴʟɪɴᴇ & ᴀᴄᴛɪᴠᴇ
-├──▸ 👤 *ᴏᴡɴᴇʀ:* ${config.OWNER_NAME || "AAQIL MD"}
-├──▸ ⏱️ *ᴜᴘᴛɪᴍᴇ:* ${uptime}
-├──▸ 🖥️ *ʀᴀᴍ:* ${RAM} MB / ${totalRam} GB
-├──▸ 📟 *ᴘʟᴀᴛғᴏʀᴍ:* ${platform}
-├──▸ 🌐 *ᴍᴏᴅᴇ:* ${config.MODE || "Public"}
-│
-└───▸
+🤖 *Status:* Online & Active
+👤 *Owner:* ${ownerName}
+⏱️ *Uptime:* ${uptime}
+🖥️ *RAM:* ${RAM} MB / ${totalRam} GB
+📟 *Platform:* ${platform}
+🌐 *Mode:* ${config.MODE || "Public"}
 
-> *🏴 ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴀᴀQɪʟ ᴍᴅ 🏴*`;
+> *Powered by ${botName}*`;
 
         await conn.sendMessage(from, { 
-            text: status,
+            text: status.trim(),
             contextInfo: {
                 mentionedJid: [sender],
                 forwardingScore: 999,
                 isForwarded: true,
                 forwardedNewsletterMessageInfo: {
                     newsletterJid: '120363431150016962@newsletter',
-                    newsletterName: BOT_NAME,
+                    newsletterName: botName,
                     serverMessageId: 143
                 }
             }
@@ -66,8 +63,9 @@ async (conn, mek, m, { from, quoted, sender, reply }) => {
         await conn.sendMessage(from, { react: { text: '🟢', key: m.key } });
 
     } catch (e) {
+        const botName = config.BOT_NAME || "AAQIL MD";
         console.error("Error in alive command:", e);
         await conn.sendMessage(from, { react: { text: '❌', key: m.key } });
-        reply(`❌ *System Error:* ${e.message}\n\n*_ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴀᴀQɪʟ ᴍᴅ_*`);
+        reply(`❌ *System Error:* ${e.message}\n\n*_Powered by ${botName}_*`);
     }
 });
