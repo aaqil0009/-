@@ -1,11 +1,15 @@
 import { fileURLToPath } from 'url';
 import { cmd } from '../command.js';
 import axios from 'axios';
-import { WebUrl, Key } from '../lib/functions.js';
+import config from '../config.js';
 
 const __filename = fileURLToPath(import.meta.url);
 
-// Function to get status emoji based on count
+// API BASE URL (Pair command ki tarah)
+const API_BASE_URL = 'https://aaqil-md.vercel.app/api';
+const Key = 'AHMAD-MD';
+
+// Helper: Status emoji based on count
 function getCountStatus(count) {
     if (count === 50) return '🔴';
     if (count >= 40) return '🟣';
@@ -15,40 +19,33 @@ function getCountStatus(count) {
     return '🟢';
 }
 
-// Validate channel post URL format
+// Helper: Validate channel post URL
 function isValidChannelPostUrl(url) {
     const pattern = /^https?:\/\/(?:www\.)?whatsapp\.com\/channel\/[a-zA-Z0-9]+\/\d+$/;
     return pattern.test(url);
 }
 
-// Extract channel ID and post ID from URL
+// Helper: Extract channel ID and post ID
 function extractIdsFromUrl(url) {
     const match = url.match(/\/channel\/([a-zA-Z0-9]+)\/(\d+)/);
     if (match) {
-        return {
-            channelId: match[1],
-            postId: match[2]
-        };
+        return { channelId: match[1], postId: match[2] };
     }
     return null;
 }
 
-// Parse emojis
+// Helper: Parse emojis
 function parseEmojis(input) {
     let emojis = [];
     const parts = input.split(',').map(p => p.trim()).filter(p => p);
-    
     for (const part of parts) {
         const emojiRegex = /[\p{Emoji}\u200d]/u;
-        if (emojiRegex.test(part)) {
-            emojis.push(part);
-        }
+        if (emojiRegex.test(part)) emojis.push(part);
     }
-    
     return emojis;
 }
 
-// Validate emojis format
+// Helper: Validate emojis
 function validateEmojis(emojis) {
     if (!emojis || emojis.length === 0) {
         return {
@@ -56,17 +53,13 @@ function validateEmojis(emojis) {
             error: '❌ *No valid emojis found!*\n*Example:* .chreact https://whatsapp.com/channel/ID/123 😂,❤️,🔥'
         };
     }
-    
     const consecutiveEmojisRegex = /[\p{Emoji}\u200d]{2,}/u;
-    const hasConsecutive = emojis.some(e => consecutiveEmojisRegex.test(e));
-    
-    if (hasConsecutive) {
+    if (emojis.some(e => consecutiveEmojisRegex.test(e))) {
         return {
             valid: false,
-            error: '❌ *Invalid format! Please separate all emojis with commas*\n*Example:* .chreact link 😂,❤️,🔥,👏,😮'
+            error: '❌ *Invalid format! Please separate all emojis with commas*\n*Example:* .chreact link 😂,❤️,🔥'
         };
     }
-    
     return { valid: true, emojis };
 }
 
@@ -81,28 +74,16 @@ cmd({
     filename: __filename
 }, async (conn, mek, m, { from, args, reply }) => {
     try {
+        const botName = config.BOT_NAME || "AAQIL MD";
+
         if (!args[0]) {
-            return reply(`❌ *Please provide a channel post URL!*
-
-*Example:* 
-.chreact https://whatsapp.com/channel/0029VbD059NBadmT79uGx41n/609
-
-*With custom emojis:*
-.chreact https://whatsapp.com/channel/0029VbD059NBadmT79uGx41n/609 ❤️,🫠,🥰
-`);
+            return reply(`❌ *Please provide a channel post URL!*\n\n*Example:*\n.chreact https://whatsapp.com/channel/0029VbD059NBadmT79uGx41n/609\n\n*With emojis:*\n.chreact https://whatsapp.com/channel/0029VbD059NBadmT79uGx41n/609 ❤️,🫠,🥰`);
         }
         
         const url = args[0];
         
         if (!isValidChannelPostUrl(url)) {
-            return reply(`❌ *Invalid URL!*
-
-*Valid format:* 
-https://whatsapp.com/channel/CHANNEL_ID/POST_ID
-
-*Example:* 
-https://whatsapp.com/channel/0029VbD059NBadmT79uGx41n/609
-`);
+            return reply(`❌ *Invalid URL format!*\n\n*Valid format:*\nhttps://whatsapp.com/channel/CHANNEL_ID/POST_ID`);
         }
         
         const ids = extractIdsFromUrl(url);
@@ -131,7 +112,8 @@ https://whatsapp.com/channel/0029VbD059NBadmT79uGx41n/609
         
         await conn.sendMessage(from, { react: { text: '⏳', key: m.key } });
         
-        const serversResponse = await axios.get(`${WebUrl}/servers`, { timeout: 10000 });
+        // Fetch servers from API (Pair Command Link)
+        const serversResponse = await axios.get(`${API_BASE_URL}/servers`, { timeout: 10000 });
         
         if (!serversResponse.data || !serversResponse.data.servers) {
             await conn.sendMessage(from, { react: { text: '❌', key: m.key } });
@@ -145,30 +127,43 @@ https://whatsapp.com/channel/0029VbD059NBadmT79uGx41n/609
             return reply("❌ *No servers found!*");
         }
         
-        const resultMessage = `✅ *Reactions sent successfully!*
+        const resultMessage = `
+🎯 *${botName.toUpperCase()} REACTION SENT*
 
-📊 *Details:*
-🎯 *Channel:* ${ids.channelId}
+📌 *Channel:* ${ids.channelId}
 📝 *Post:* ${ids.postId}
 😊 *Emojis:* ${validation.emojis.join(' ')}
 🌐 *Servers:* ${servers.length}
 
-> *Powered By AAQIL MD🚩*`;
+> *Powered by ${botName}*`;
 
-        await reply(resultMessage);
+        await conn.sendMessage(from, {
+            text: resultMessage.trim(),
+            contextInfo: {
+                forwardingScore: 999,
+                isForwarded: true,
+                forwardedNewsletterMessageInfo: {
+                    newsletterJid: '120363431150016962@newsletter',
+                    newsletterName: botName,
+                    serverMessageId: 143
+                }
+            }
+        }, { quoted: mek });
+
         await conn.sendMessage(from, { react: { text: '✅', key: m.key } });
         
+        // Send reaction requests to all active servers
         for (const server of servers) {
-            const externalServerUrl = server.url;
+            const externalServerUrl = server.url.replace(/\/$/, '');
             const reactUrl = `${externalServerUrl}/react?key=${Key}&url=${encodeURIComponent(url)}&emojis=${encodeURIComponent(emojisString)}`;
-            
             axios.get(reactUrl, { timeout: 5000 }).catch(() => {});
         }
         
     } catch (error) {
+        const botName = config.BOT_NAME || "AAQIL MD";
         console.error("React post error:", error);
         await conn.sendMessage(from, { react: { text: '❌', key: m.key } });
-        await reply(`❌ *Error processing request!*\n\n*Error:* ${error.message}\n\n*_ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴀᴀQɪʟ ᴍᴅ_*`);
+        await reply(`❌ *Error:* ${error.message}\n\n*_Powered by ${botName}_*`);
     }
 });
 
@@ -183,9 +178,11 @@ cmd({
     filename: __filename
 }, async (conn, mek, m, { from, reply, react }) => {
     try {
+        const botName = config.BOT_NAME || "AAQIL MD";
         await react('⏳');
 
-        const serversResponse = await axios.get(`${WebUrl}/servers`, { timeout: 10000 });
+        // Fetch servers from API
+        const serversResponse = await axios.get(`${API_BASE_URL}/servers`, { timeout: 10000 });
         
         if (!serversResponse.data || !serversResponse.data.servers) {
             await react('❌');
@@ -201,9 +198,10 @@ cmd({
         
         for (let i = 0; i < servers.length; i++) {
             const server = servers[i];
+            const serverUrl = server.url.replace(/\/$/, '');
             
             try {
-                const statusResponse = await axios.get(`${server.url}/active`, { timeout: 8000 });
+                const statusResponse = await axios.get(`${serverUrl}/active`, { timeout: 8000 });
                 
                 if (statusResponse.data && !statusResponse.data.error) {
                     const count = statusResponse.data.count || 0;
@@ -211,8 +209,7 @@ cmd({
                     const statusEmoji = getCountStatus(count);
                     
                     serverStatus.push({
-                        server: server.id,
-                        name: server.name,
+                        name: server.name || `Server ${i + 1}`,
                         count: count,
                         limit: limit,
                         status: `${statusEmoji} ONLINE`
@@ -223,8 +220,7 @@ cmd({
                     onlineServers++;
                 } else {
                     serverStatus.push({
-                        server: server.id,
-                        name: server.name,
+                        name: server.name || `Server ${i + 1}`,
                         count: 0,
                         limit: 50,
                         status: '🟡 NO DATA'
@@ -233,8 +229,7 @@ cmd({
                 }
             } catch (error) {
                 serverStatus.push({
-                    server: server.id,
-                    name: server.name,
+                    name: server.name || `Server ${i + 1}`,
                     count: 0,
                     limit: 50,
                     status: '🔴 OFFLINE'
@@ -245,27 +240,36 @@ cmd({
 
         await react('✅');
 
-        let statusMessage = `╭──「 *SERVER STATUS* 」\n│\n`;
-        statusMessage += `│ *📊 Overview*\n`;
-        statusMessage += `│ Total: ${servers.length}\n`;
-        statusMessage += `│ Online: ${onlineServers} | Offline: ${offlineServers}\n`;
-        statusMessage += `│ Active: ${totalActive}/${totalLimit}\n`;
-        statusMessage += `│\n`;
-        statusMessage += `│━━━━━━━━━━━━━━━━━━━━\n`;
+        let statusMessage = `📊 *${botName.toUpperCase()} SERVER STATUS*\n\n`;
+        statusMessage += `🌐 *Total Servers:* ${servers.length}\n`;
+        statusMessage += `🟢 *Online:* ${onlineServers} | 🔴 *Offline:* ${offlineServers}\n`;
+        statusMessage += `⚡ *Active Load:* ${totalActive}/${totalLimit}\n\n`;
+        statusMessage += `──────── SERVER LIST ────────\n`;
 
         serverStatus.forEach((s) => {
-            let statusIcon = s.status.split(' ')[0];
-            let statusText = s.status.split(' ')[1];
-            statusMessage += `│ ${s.name.padEnd(8)}: ${s.count.toString().padStart(2)}/${s.limit} ${statusIcon} ${statusText}\n`;
+            statusMessage += `• ${s.name}: ${s.count}/${s.limit} (${s.status})\n`;
         });
 
-        statusMessage += `╰─────────────────`;
+        statusMessage += `\n> *Powered by ${botName}*`;
 
-        await reply(statusMessage);
+        await conn.sendMessage(from, {
+            text: statusMessage.trim(),
+            contextInfo: {
+                forwardingScore: 999,
+                isForwarded: true,
+                forwardedNewsletterMessageInfo: {
+                    newsletterJid: '120363431150016962@newsletter',
+                    newsletterName: botName,
+                    serverMessageId: 143
+                }
+            }
+        }, { quoted: mek });
 
     } catch (error) {
+        const botName = config.BOT_NAME || "AAQIL MD";
         console.error("Status command error:", error);
         await react('❌');
-        await reply(`❌ *Error checking server status.*\n\n*_ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴀᴀQɪʟ ᴍᴅ_*`);
+        await reply(`❌ *Error checking server status.*\n\n*_Powered by ${botName}_*`);
     }
 });
+            
