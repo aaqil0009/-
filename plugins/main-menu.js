@@ -21,14 +21,14 @@ const toSmallCaps = (text) => {
     return text.toLowerCase().split('').map(char => smallCapsMap[char] || char).join('');
 };
 
-// --- MODERN CYBER CATEGORY DESIGN ---
+// --- ULTRA CLEAN & MINIMAL CATEGORY DESIGN ---
 const formatCategory = (category, cmds) => {
     const validCmds = cmds.filter(cmd => cmd.pattern && cmd.pattern.trim() !== '');
     if (validCmds.length === 0) return ''; 
     
-    let header = `\n┌───〔 *${toSmallCaps(category)}* 〕\n│\n`;
-    let body = validCmds.map(cmd => `├──▸ .${toSmallCaps(cmd.pattern)}`).join('\n');
-    let footer = `\n└───▸\n`;
+    let header = `\n─── *${toSmallCaps(category).toUpperCase()} MENU* ───\n\n`;
+    let body = validCmds.map(cmd => `  › .${toSmallCaps(cmd.pattern)}`).join('\n');
+    let footer = `\n`;
     
     return `${header}${body}${footer}`;
 };
@@ -37,7 +37,7 @@ cmd({
     pattern: "menu",
     alias: ["m", "help", "allmenu"],
     category: "main",
-    react: "👑",
+    react: "⚜️",
     filename: __filename
 },
 async (conn, mek, m, { from, pushname, reply }) => {
@@ -63,31 +63,29 @@ async (conn, mek, m, { from, pushname, reply }) => {
             menuSections += formatCategory(cat, catCmds);
         });
 
-        const BOT_NAME = config.BOT_NAME || "AAQIL MD";
+        // Config variables setup
+        const botName = config.BOT_NAME || "AAQIL MD";
+        const ownerName = config.OWNER_NAME || "Aaqil";
         const uptime = runtime(process.uptime());
         const ramUsed = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2);
         const totalRam = (os.totalmem() / 1024 / 1024 / 1024).toFixed(2);
 
-        // --- MODERN CYBER / TECH DASHBOARD DESIGN ---
+        // --- SLEEK & CLEAN MENU DASHBOARD ---
         let dec = `
-  🏴 *${BOT_NAME.toUpperCase()}* 🏴
+*${botName.toUpperCase()}*
 
-┌───〔 *S Y S T E M* 〕
-│
-├──▸ 👤 *ᴏᴡɴᴇʀ:* ${config.OWNER_NAME || "AAQIL MD"}
-├──▸ ⏱️ *ᴜᴘᴛɪᴍᴇ:* ${uptime}
-├──▸ 📜 *ᴄᴏᴍᴍᴀɴᴅs:* ${Object.keys(commands).length}
-├──▸ 🌐 *ᴍᴏᴅᴇ:* ${config.MODE || "Public"}
-├──▸ 🖥️ *ʀᴀᴍ:* ${ramUsed} MB / ${totalRam} GB
-│
-└───▸
+▫️ *Owner:* ${ownerName}
+▫️ *Mode:* ${config.MODE || "Public"}
+▫️ *Uptime:* ${uptime}
+▫️ *Commands:* ${Object.keys(commands).length}
+▫️ *RAM Usage:* ${ramUsed} MB / ${totalRam} GB
 ${menuSections}
-> *🏴 ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴀᴀQɪʟ ᴍᴅ 🏴*`;
+> *Powered by ${botName}*`;
 
         // Image URL Selection
         let imageToUse = config.BOT_IMAGE || "https://files.catbox.moe/utq5vt.jpg";
 
-        // 1. Menu Image Send with Caption
+        // Menu Image Message
         await conn.sendMessage(from, { 
             image: { url: imageToUse },
             caption: dec, 
@@ -97,20 +95,15 @@ ${menuSections}
                 isForwarded: true, 
                 forwardedNewsletterMessageInfo: { 
                     newsletterJid: '120363431150016962@newsletter', 
-                    newsletterName: config.BOT_NAME || "AAQIL MD", 
+                    newsletterName: botName, 
                     serverMessageId: 143 
                 } 
             } 
         }, { quoted: mek });
 
-        // 2. Audio File Send
-        await conn.sendMessage(from, {
-            audio: { url: "https://files.catbox.moe/yvvzji.mp3" },
-            mimetype: 'audio/mpeg',
-            ptt: false
-        }, { quoted: mek });
-
     } catch (e) { 
-        reply(`❌ *Error:* ${e.message}\n\n*_ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴀᴀQɪʟ ᴍᴅ_*`); 
+        const botName = config.BOT_NAME || "AAQIL MD";
+        reply(`❌ *Error:* ${e.message}\n\n*_Powered by ${botName}_*`); 
     } 
 });
+                                                                   
