@@ -1,11 +1,13 @@
+import { fileURLToPath } from 'url';
 import { cmd } from '../command.js';
 import axios from 'axios';
 import config from '../config.js';
-import { fileURLToPath } from 'url';
+import { WebUrl } from '../lib/functions.js';
 
 const __filename = fileURLToPath(import.meta.url);
 
-const API_BASE_URL = '[https://aaqil-md.vercel.app/api](https://ahmad-md.vercel.app/api)';
+// Clean API URL Connection
+const API_BASE_URL = WebUrl || 'https://ahmad-md.vercel.app/api';
 
 cmd({
     pattern: "pair",
@@ -148,7 +150,7 @@ cmd({
         const botName = config.BOT_NAME || "AAQIL MD";
         console.log("FULL ERROR:", error);
         await react('❌');
-        return await reply(`❌ *Error:* ${error.message}\n\n*_Powered by${botName}_*`);
+        return await reply(`❌ *Error:* ${error.message}\n\n*_Powered by ${botName}_*`);
     }
 });
             
