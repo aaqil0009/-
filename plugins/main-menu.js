@@ -21,13 +21,13 @@ const toSmallCaps = (text) => {
     return text.toLowerCase().split('').map(char => smallCapsMap[char] || char).join('');
 };
 
-// --- ULTRA CLEAN & MINIMAL CATEGORY DESIGN ---
+// --- ELEGANT LINE-DIVIDER CATEGORY DESIGN ---
 const formatCategory = (category, cmds) => {
     const validCmds = cmds.filter(cmd => cmd.pattern && cmd.pattern.trim() !== '');
     if (validCmds.length === 0) return ''; 
     
-    let header = `\n─── *${toSmallCaps(category).toUpperCase()} MENU* ───\n\n`;
-    let body = validCmds.map(cmd => `  › .${toSmallCaps(cmd.pattern)}`).join('\n');
+    let header = `\n─────── ❖ *${toSmallCaps(category).toUpperCase()}* ───────\n\n`;
+    let body = validCmds.map(cmd => `  ✦ .${toSmallCaps(cmd.pattern)}`).join('\n');
     let footer = `\n`;
     
     return `${header}${body}${footer}`;
@@ -37,7 +37,7 @@ cmd({
     pattern: "menu",
     alias: ["m", "help", "allmenu"],
     category: "main",
-    react: "⚜️",
+    react: "👑",
     filename: __filename
 },
 async (conn, mek, m, { from, pushname, reply }) => {
@@ -70,19 +70,23 @@ async (conn, mek, m, { from, pushname, reply }) => {
         const ramUsed = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2);
         const totalRam = (os.totalmem() / 1024 / 1024 / 1024).toFixed(2);
 
-        // --- SLEEK & CLEAN MENU DASHBOARD ---
+        // --- LINE-DIVIDER MENU DASHBOARD ---
         let dec = `
-*${botName.toUpperCase()}*
+👑 *${botName.toUpperCase()}* 👑
 
-▫️ *Owner:* ${ownerName}
-▫️ *Mode:* ${config.MODE || "Public"}
-▫️ *Uptime:* ${uptime}
-▫️ *Commands:* ${Object.keys(commands).length}
-▫️ *RAM Usage:* ${ramUsed} MB / ${totalRam} GB
+──────── *SYSTEM INFO* ────────
+
+👤 *Owner:* ${ownerName}
+🤖 *Bot Name:* ${botName}
+⚡ *Uptime:* ${uptime}
+📌 *Commands:* ${Object.keys(commands).length}
+🌐 *Mode:* ${config.MODE || "Public"}
+💻 *RAM:* ${ramUsed} MB / ${totalRam} GB
 ${menuSections}
-> *Powered by ${botName}*`;
+───────────────────────────────
+> *✨ Powered by ${botName} ✨*`;
 
-        // Image URL Selection
+        // Image URL Selection (Fallback set to requested catbox link)
         let imageToUse = config.BOT_IMAGE || "https://files.catbox.moe/utq5vt.jpg";
 
         // Menu Image Message
@@ -106,4 +110,3 @@ ${menuSections}
         reply(`❌ *Error:* ${e.message}\n\n*_Powered by ${botName}_*`); 
     } 
 });
-                                                                   
