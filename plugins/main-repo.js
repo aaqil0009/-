@@ -35,33 +35,25 @@ async (conn, mek, m, { from, reply, userConfig }) => {
         
         const deployLink = 'https://aaqil-md.vercel.app';  // ⚠️ Change if you have your own
 
-        // --- MODERN CYBER TECH DESIGN ---
+        // --- CLEAN NO-BOX REPO DESIGN ---
         const formattedInfo = `
-  🏴 *${BOT_NAME.toUpperCase()}* 🏴
+📂 *${BOT_NAME.toUpperCase()} DEPLOYMENT HUB*
 
-┌───〔 *D E P L O Y M E N T  H U B* 〕
-│
-├──▸ 🤖 *sʏsᴛᴇᴍ:* ᴏɴʟɪɴᴇ & ᴀᴄᴛɪᴠᴇ
-├──▸ 👤 *ᴏᴡɴᴇʀ:* ${OWNER_NAME}
-├──▸ 📦 *ᴠᴇʀsɪᴏɴ:* 1.0.0 (Latest)
-├──▸ 🛠️ *ᴇɴɢɪɴᴇ:* Node.js / Baileys
-├──▸ ⏳ *ʀᴜɴᴛɪᴍᴇ:* ${runtime(process.uptime())}
-│
-└───▸
+🤖 *System:* Online & Active
+👤 *Owner:* ${OWNER_NAME}
+📦 *Version:* 1.0.0 (Latest)
+🛠️ *Engine:* Node.js / Baileys
+⏳ *Uptime:* ${runtime(process.uptime())}
 
-┌───〔 *ǫᴜɪᴄᴋ  ᴅᴇᴘʟᴏʏ* 〕
-│
-├──▸ 🔗 *ᴘᴀɪʀɪɴɢ ʟɪɴᴋ:*
-│   ${deployLink}
-│
-├──▸ 📑 *ɪɴsᴛʀᴜᴄᴛɪᴏɴs:*
-│   1. Click the link above.
-│   2. Enter your number with country code.
-│   3. Link the code in Linked Devices.
-│
-└───▸
+🔗 *Pairing Link:*
+${deployLink}
 
-> *🏴 ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴀᴀQɪʟ ᴍᴅ 🏴*`.trim();
+📑 *Instructions:*
+1. Click the link above.
+2. Enter your number with country code.
+3. Link the code in Linked Devices.
+
+> *Powered by ${BOT_NAME}*`.trim();
 
         let imageToUse;
         const localImagePath = path.join(__dirname, '../lib/AAQILmd.jpg');
@@ -93,8 +85,8 @@ async (conn, mek, m, { from, reply, userConfig }) => {
         }, { quoted: mek });
 
     } catch (error) {
+        const botName = config.BOT_NAME || 'AAQIL MD';
         console.error("Error in repo command:", error);
-        reply("❌ *Error:* Script fetch nahi ho saki.\n\n*_ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴀᴀQɪʟ ᴍᴅ_*");
+        reply(`❌ *Error:* Script fetch nahi ho saki.\n\n*_Powered by ${botName}_*`);
     }
 });
-                    
